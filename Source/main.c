@@ -65,7 +65,7 @@ void log2file(const char *fmt, ...)
 }
 //}}
 
-const char* python_file = "bakebit_nanohat_oled.py";
+const char* python_file = "ra1nbox.py";
 static int get_work_path(char* buff, int maxlen) {
     ssize_t len = readlink("/proc/self/exe", buff, maxlen);
     if (len == -1 || len == maxlen) {                         
@@ -87,7 +87,7 @@ extern int find_pid_by_name( char* ProcName, int* foundpid);
 void send_signal_to_python_process(int signal) {
     int i, rv;
     if (pid_count == 0) {
-        rv = find_pid_by_name( "python2.7", py_pids);
+        rv = find_pid_by_name( "python3.7", py_pids);
         for(i=0; py_pids[i] != 0; i++) {
             log2file("found python pid: %d\n", py_pids[i]);
             pid_count++;
@@ -116,7 +116,7 @@ void* threadfunc(char* arg) {
 int load_python_view() {
     int ret;
     char* cmd = (char*)malloc(255);
-    sprintf(cmd, "cd %s/BakeBit/Software/Python && python %s 2>&1 | tee /tmp/nanoled-python.log", workpath, python_file);
+    sprintf(cmd, "cd %s && python3 %s 2>&1 | tee /tmp/nanoled-python.log", workpath, python_file);
     ret = pthread_create(&view_thread_id, NULL, (void*)threadfunc,cmd);
     if(ret) {
         log2file("create pthread error \n");
